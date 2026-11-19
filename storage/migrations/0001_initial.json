@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "description": "Create the pay link and payment tables.",
+  "operations": [
+    {
+      "op": "create_table",
+      "table": "pay_links",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "wallet_id",
+          "type": "string"
+        },
+        {
+          "name": "wallet_name",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "min",
+          "type": "number"
+        },
+        {
+          "name": "max",
+          "type": "number"
+        },
+        {
+          "name": "currency",
+          "type": "string"
+        },
+        {
+          "name": "comment_chars",
+          "type": "integer"
+        },
+        {
+          "name": "success_text",
+          "type": "string"
+        },
+        {
+          "name": "success_url",
+          "type": "string"
+        },
+        {
+          "name": "base_url",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "datetime"
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime"
+        }
+      ]
+    },
+    {
+      "op": "create_table",
+      "table": "payments",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "link_id",
+          "type": "string"
+        },
+        {
+          "name": "payment_hash",
+          "type": "string"
+        },
+        {
+          "name": "amount_msat",
+          "type": "integer"
+        },
+        {
+          "name": "comment",
+          "type": "string"
+        },
+        {
+          "name": "paid_at",
+          "type": "datetime"
+        }
+      ]
+    },
+    {
+      "op": "create_index",
+      "table": "pay_links",
+      "name": "pay_links_by_created_at",
+      "field": "created_at"
+    },
+    {
+      "op": "create_index",
+      "table": "payments",
+      "name": "payments_by_link",
+      "field": "link_id"
+    }
+  ]
+}

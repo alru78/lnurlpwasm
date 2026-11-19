@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pay Links</title>
+    <link rel="stylesheet" href="/ext-assets/lnurlpwasm/_lnbits/bundle.min.css" />
+    <link rel="stylesheet" href="/ext-assets/lnurlpwasm/_lnbits/material-icons.css" />
+    <link rel="stylesheet" href="/ext-assets/lnurlpwasm/app.css" />
+  </head>
+  <body class="body--dark">
+    <main class="shell q-pa-md">
+      <header class="q-mb-md">
+        <h1 class="text-h5 text-weight-bold q-my-none">Pay Links</h1>
+        <p class="muted q-my-none">LNURL-pay links with your own amounts, comments and success messages.</p>
+      </header>
+
+      <section class="panel q-pa-md q-mb-md">
+        <h2 id="form-title" class="text-h6 q-mt-none q-mb-md">New pay link</h2>
+        <div id="link-form" class="form">
+          <label>
+            <span class="muted">Description (shown in the payer's wallet)</span>
+            <input name="description" maxlength="500" />
+          </label>
+          <div class="amount-row amount-row--three">
+            <label>
+              <span class="muted">Minimum</span>
+              <input name="min" inputmode="decimal" value="10" />
+            </label>
+            <label>
+              <span class="muted">Maximum</span>
+              <input name="max" inputmode="decimal" value="10000" />
+            </label>
+            <label>
+              <span class="muted">Currency</span>
+              <select name="currency"></select>
+            </label>
+          </div>
+          <label>
+            <span class="muted">Wallet</span>
+            <select name="walletId"></select>
+          </label>
+          <label>
+            <span class="muted">Comment length allowed (0 = no comments)</span>
+            <input name="commentChars" inputmode="numeric" value="0" />
+          </label>
+          <label>
+            <span class="muted">Success message (optional, max 144 characters)</span>
+            <input name="successText" maxlength="144" />
+          </label>
+          <label>
+            <span class="muted">Success link (optional, https only)</span>
+            <input name="successUrl" maxlength="2048" placeholder="https://" />
+          </label>
+          <div class="actions">
+            <button id="save-button" class="q-btn bg-primary text-white" type="button">Create pay link</button>
+            <button id="cancel-button" class="q-btn text-grey-2" type="button" hidden>Cancel</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel q-pa-md">
+        <h2 class="text-h6 q-mt-none q-mb-md">Your pay links</h2>
+        <p id="empty" class="muted" hidden>No pay links yet.</p>
+        <div id="link-list" class="list"></div>
+      </section>
+    </main>
+    <script src="/ext-assets/lnurlpwasm/_lnbits/vue.global.prod.js"></script>
+    <script src="/ext-assets/lnurlpwasm/_lnbits/qrcode.vue.browser.js"></script>
+    <script src="/ext-assets/lnurlpwasm/lnbits-extension-sdk.js"></script>
+    <script src="/ext-assets/lnurlpwasm/admin.js"></script>
+  </body>
+</html>

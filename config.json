@@ -1,0 +1,196 @@
+{
+  "id": "lnurlpwasm",
+  "name": "Pay Links",
+  "short_description": "LNURL-pay links with your own amounts, comments and success messages.",
+  "version": "0.1.0",
+  "min_lnbits_version": "1.7.2",
+  "extension_type": "wasm",
+  "contributors": [
+    {
+      "name": "alru78",
+      "uri": "https://github.com/alru78",
+      "role": "Developer"
+    },
+    {
+      "name": "LNbits",
+      "uri": "https://github.com/lnbits/lnurlp",
+      "role": "Original LNURLp extension"
+    }
+  ],
+  "license": "MIT",
+  "description_md": "https://raw.githubusercontent.com/alru78/lnurlpwasm/main/description.md",
+  "wasm": {
+    "module": "wasm/module.wasm",
+    "exports": [
+      {
+        "name": "create-pay-link",
+        "visibility": "authenticated"
+      },
+      {
+        "name": "update-pay-link",
+        "visibility": "authenticated"
+      },
+      {
+        "name": "list-pay-links",
+        "visibility": "authenticated"
+      },
+      {
+        "name": "delete-pay-link",
+        "visibility": "authenticated"
+      },
+      {
+        "name": "list-pay-link-payments",
+        "visibility": "authenticated"
+      },
+      {
+        "name": "list-wallets",
+        "visibility": "authenticated"
+      },
+      {
+        "name": "list-currencies",
+        "visibility": "public"
+      },
+      {
+        "name": "lnurl-pay-request",
+        "visibility": "public"
+      },
+      {
+        "name": "lnurl-pay-callback",
+        "visibility": "public"
+      },
+      {
+        "name": "record-payment",
+        "visibility": "event"
+      }
+    ]
+  },
+  "events": {
+    "onInvoicePaid": "record-payment"
+  },
+  "ui_routes": [
+    {
+      "path": "/lnurlpwasm",
+      "entrypoint": "ui/admin.html",
+      "auth": "user"
+    }
+  ],
+  "api_routes": [
+    {
+      "method": "POST",
+      "path": "/links",
+      "export": "create-pay-link",
+      "auth": "user"
+    },
+    {
+      "method": "PUT",
+      "path": "/links/{link_id}",
+      "export": "update-pay-link",
+      "auth": "user",
+      "path_params": {
+        "link_id": "linkId"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/links",
+      "export": "list-pay-links",
+      "auth": "user"
+    },
+    {
+      "method": "DELETE",
+      "path": "/links/{link_id}",
+      "export": "delete-pay-link",
+      "auth": "user",
+      "path_params": {
+        "link_id": "linkId"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/links/{link_id}/payments",
+      "export": "list-pay-link-payments",
+      "auth": "user",
+      "path_params": {
+        "link_id": "linkId"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/wallets",
+      "export": "list-wallets",
+      "auth": "user"
+    },
+    {
+      "method": "GET",
+      "path": "/currencies",
+      "export": "list-currencies",
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/lnurl/{link_id}",
+      "export": "lnurl-pay-request",
+      "auth": "public",
+      "path_params": {
+        "link_id": "linkId"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/lnurl/{link_id}/cb",
+      "export": "lnurl-pay-callback",
+      "auth": "public",
+      "path_params": {
+        "link_id": "linkId"
+      }
+    }
+  ],
+  "permissions": [
+    {
+      "id": "ext.storage.read",
+      "description": "Read pay links and recorded payments."
+    },
+    {
+      "id": "ext.storage.write",
+      "description": "Save pay links and record payments."
+    },
+    {
+      "id": "ext.storage.read_public",
+      "description": "Answer LNURL requests with a pay link's description, amount range, comment length and success message. The receiving wallet is never public.",
+      "policies": [
+        {
+          "table_name": "pay_links",
+          "public_fields": [
+            "id",
+            "description",
+            "min",
+            "max",
+            "currency",
+            "comment_chars",
+            "success_text",
+            "success_url",
+            "base_url"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wallet.create_invoice_public",
+      "description": "Create invoices into the wallet chosen for the pay link.",
+      "policies": [
+        {
+          "table": "pay_links",
+          "wallet_field": "wallet_id"
+        }
+      ]
+    },
+    {
+      "id": "wallet.list",
+      "description": "Show your wallets so you can choose where payments go."
+    },
+    {
+      "id": "utils.basic",
+      "description": "List currencies and convert fiat amounts to sats."
+    }
+  ]
+}
