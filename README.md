@@ -73,3 +73,7 @@ npm run build:wasm  # rebuild wasm/module.wasm with jco
 ## License
 
 MIT, like the original LNURLp extension.
+
+The icon (`static/assets/icon.png`, source `assets/icon.svg`) uses lettering
+converted from the Permanent Marker font, licensed under the Apache License 2.0
+(`assets/LICENSE-PermanentMarker.txt`).
