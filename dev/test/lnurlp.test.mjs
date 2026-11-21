@@ -256,3 +256,17 @@ test('max must not be below min and internal errors stay generic', () => {
   owner = null
   assert.deepEqual(lnurl(ext.lnurlPayRequest, '{not json' ), {status: 'ERROR', reason: 'Unable to process the request.'})
 })
+
+test('the comment limit always fits the host extra cap', () => {
+  owner = 'alice'
+  const base = {walletId: 'w_alice', description: 'd', min: 10, max: 1000, currency: 'sat', baseUrl: BASE}
+  assert.match(callError(ext.createPayLink, {...base, commentChars: 681}), /between 0 and 680/)
+  owner = null
+  const link = createLink({commentChars: 680})
+  // Worst case: every UTF-16 unit escapes to 6 bytes in ensure_ascii JSON.
+  const comment = '\u{1F600}'.repeat(340)
+  assert.equal(comment.length, 680)
+  assert.ok(lnurl(ext.lnurlPayCallback, {linkId: link.id, amount: '20000', comment}).pr)
+  const escaped = JSON.stringify(invoices.at(-1).extra).replace(/[\u007f-\uffff]/g, '\\uXXXX')
+  assert.ok(escaped.length <= 4096, `extra is ${escaped.length} bytes`)
+})

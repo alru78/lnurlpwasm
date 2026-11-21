@@ -6,7 +6,10 @@ const PAYMENTS_TABLE = 'payments'
 const LINK_SEARCH_FIELDS = ['description', 'wallet_name']
 const MAX_DESCRIPTION = 500
 const MAX_SUCCESS_TEXT = 144
-const MAX_COMMENT_CHARS = 799
+// The host caps invoice extra at 4096 bytes of ensure_ascii JSON, where every
+// non-ASCII UTF-16 unit becomes a 6-byte \uXXXX escape. {"comment":""} takes 14
+// bytes, so (4096 - 14) / 6 = 680 units always fit, whatever the script.
+const MAX_COMMENT_CHARS = 680
 const MAX_SENDABLE_SAT = 10_000_000
 const PAYMENT_HASH_PATTERN = /^[0-9a-f]{64}$/
 // Fiat links: the payer's wallet converts with its own rate, so accept a small
@@ -225,7 +228,7 @@ function payLinkFields(request) {
   if (!Number.isInteger(commentChars) || commentChars < 0 || commentChars > MAX_COMMENT_CHARS) {
     throw new Error(`commentChars must be between 0 and ${MAX_COMMENT_CHARS}.`)
   }
-  const successUrl = cleanText(request.successUrl, 2048)
+  const successUrl = cleanText(request.successUrl, 2000)
   if (successUrl && !/^https:\/\/[^\s/?#]+[^\s]*$/i.test(successUrl)) {
     throw new Error('successUrl must start with https://.')
   }
